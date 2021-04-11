@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>gitlab-ee 企业版自签许可证license | Chanson Shi</title>
+  <meta name="description" content="本篇文章主要是研究gitlab-ee的licence签发方式，仅供大家学习参考使用。请尊重软件开发者成果，支持正版。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gitlab-ee 企业版自签许可证license">
+<meta property="og:url" content="https://blog.shichanson.site/2019/12/23/crack-gitlab-ee-licence/index.html">
+<meta property="og:site_name" content="blog of home">
+<meta property="og:description" content="本篇文章主要是研究gitlab-ee的licence签发方式，仅供大家学习参考使用。请尊重软件开发者成果，支持正版。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-12-23T03:27:40.000Z">
+<meta property="article:modified_time" content="2019-12-23T03:27:40.000Z">
+<meta property="article:author" content="Chanson Shi">
+<meta property="article:tag" content="gitlab">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.shichanson.site/2019/12/23/crack-gitlab-ee-licence/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="blog of home" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+
+<body class="main-center theme-purple" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/shichanson" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Chanson Shi</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Golang Developer &amp; DevOps</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shanghai, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/shichanson" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/shichanson" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/shichanson" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://facebook.com/shichanson" target="_blank" title="Facebook" data-toggle=tooltip data-placement=top><i class="icon icon-facebook"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                微信公众号：<b>低烈度程序员</b></br> <img src="/images/wxgzh.jpg" width="140" height="140">
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Coding/">Coding</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Container-Cloud/">Container Cloud</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/DevOps/">DevOps</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/GitOps/">GitOps</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ops/">Ops</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/frontend/">frontend</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmd/" rel="tag">cmd</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/" rel="tag">gitlab</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitops/" rel="tag">gitops</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/" rel="tag">helm</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/" rel="tag">kubernetes</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/story/" rel="tag">story</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/" rel="tag">tools</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zoom/" rel="tag">zoom</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF%E8%B7%A8%E5%9F%9F/" rel="tag">前端跨域</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA/" rel="tag">机器人</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/cmd/" style="font-size: 13px;">cmd</a> <a href="/tags/gitlab/" style="font-size: 13.67px;">gitlab</a> <a href="/tags/gitops/" style="font-size: 13px;">gitops</a> <a href="/tags/helm/" style="font-size: 13.33px;">helm</a> <a href="/tags/kubernetes/" style="font-size: 13.33px;">kubernetes</a> <a href="/tags/story/" style="font-size: 13px;">story</a> <a href="/tags/tools/" style="font-size: 14px;">tools</a> <a href="/tags/zoom/" style="font-size: 13px;">zoom</a> <a href="/tags/%E5%89%8D%E7%AB%AF%E8%B7%A8%E5%9F%9F/" style="font-size: 13px;">前端跨域</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA/" style="font-size: 13px;">机器人</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13px;">算法</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled ">
+        
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/09/20/macos-init-env/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Tools/">Tools</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/20/macos-init-env/" class="title">如何快速初始化 MacOS 开发环境</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-20T12:25:23.000Z" itemprop="datePublished">2020-09-20</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/09/16/vmwareworkstation_16_pro_license/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Ops/">Ops</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/16/vmwareworkstation_16_pro_license/" class="title">VMware Workstation Pro 16 内置容器工具vctl彻底替换docker（内含批量激活密钥）</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-16T12:25:23.000Z" itemprop="datePublished">2020-09-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/08/09/oss-crossdomain-ssl/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/frontend/">frontend</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/08/09/oss-crossdomain-ssl/" class="title">基于阿里云OSS解决前端图片跨域的问题</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-08-09T03:25:23.000Z" itemprop="datePublished">2020-08-09</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/08/06/gcp-install-gfw-v2ray-server/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Ops/">Ops</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/08/06/gcp-install-gfw-v2ray-server/" class="title">搭建免费科学上网服务器v2ray</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-08-06T12:25:23.000Z" itemprop="datePublished">2020-08-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/06/04/install-ros-melodic-ubuntu-18-04/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/ROS/">ROS</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/04/install-ros-melodic-ubuntu-18-04/" class="title">基于Ubuntu安装ROS 系统（melodic版本）</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-04T02:25:23.000Z" itemprop="datePublished">2020-06-04</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-crack-gitlab-ee-licence" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      gitlab-ee 企业版自签许可证license
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/12/23/crack-gitlab-ee-licence/" class="article-date">
+	  <time datetime="2019-12-23T03:27:40.000Z" itemprop="datePublished">2019-12-23</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/DevOps/">DevOps</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/gitlab/" rel="tag">gitlab</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/12/23/crack-gitlab-ee-licence/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.2k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 6(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>本篇文章主要是研究gitlab-ee的licence签发方式，仅供大家学习参考使用。请尊重软件开发者成果，支持正版。</p>
+<a id="more"></a>
+<h2 id="背景"><a class="markdownIt-Anchor" href="#背景"></a> 背景</h2>
+<p>最近帮一个朋友推动开发测试一体化从DevOps转向GitOps。对于什么是GitOps，有时间搞个专题博客来讲讲这个概念以及最佳实践。总之在推进GitOps的时候需要，需要一些gitlab-ee 的高级特性。</p>
+<h3 id="1-安装ruby环境以及gem包管理工具"><a class="markdownIt-Anchor" href="#1-安装ruby环境以及gem包管理工具"></a> 1. 安装ruby环境以及gem包管理工具</h3>
+<ul>
+<li>
+<p>由于我的电脑是mbp,所以自带ruby开发环境,无需安装。</p>
+</li>
+<li>
+<p>安装相关ruby包依赖<code>gitlab</code>、<code>gitlab-license</code>、<code>openssl</code></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo gem install gitlab</span><br><span class="line">sudo gem install gitlab-license</span><br><span class="line">sudo gem install openssl</span><br></pre></td></tr></table></figure>
+<h3 id="2-编写创建license的ruby脚本并生成license文件"><a class="markdownIt-Anchor" href="#2-编写创建license的ruby脚本并生成license文件"></a> 2. 编写创建license的ruby脚本，并生成license文件</h3>
+<ul>
+<li>创建脚本文件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim createlicense.rb</span><br></pre></td></tr></table></figure>
+<ul>
+<li>文件内容如下</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="string">&#x27;openssl&#x27;</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">&#x27;gitlab/license&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Generate a key pair. You should do this only once.</span></span><br><span class="line">key_pair = OpenSSL::PKey::RSA.generate(<span class="number">2048</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Write it to a file to use in the license generation application.</span></span><br><span class="line">File.open(<span class="string">&quot;license_key&quot;</span>, <span class="string">&quot;w&quot;</span>) &#123; <span class="params">|f|</span> f.write(key_pair.to_pem) &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Extract the public key.</span></span><br><span class="line">public_key = key_pair.public_key</span><br><span class="line"><span class="comment"># Write it to a file to ship along with the main application.</span></span><br><span class="line">File.open(<span class="string">&quot;license_key.pub&quot;</span>, <span class="string">&quot;w&quot;</span>) &#123; <span class="params">|f|</span> f.write(public_key.to_pem) &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># In the license generation application, load the private key from a file.</span></span><br><span class="line">private_key = OpenSSL::PKey::RSA.new File.read(<span class="string">&quot;license_key&quot;</span>)</span><br><span class="line">Gitlab::License.encryption_key = private_key</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build a new license.</span></span><br><span class="line">license = Gitlab::License.new</span><br><span class="line"></span><br><span class="line"><span class="comment"># License information to be rendered as a table in the admin panel.</span></span><br><span class="line"><span class="comment"># E.g.: &quot;This instance of GitLab Enterprise Edition is licensed to:&quot;</span></span><br><span class="line"><span class="comment"># Specific keys don&#x27;t matter, but there needs to be at least one.</span></span><br><span class="line">license.licensee = &#123;</span><br><span class="line">  <span class="string">&quot;Name&quot;</span>    =&gt; <span class="string">&quot;tester&quot;</span>,</span><br><span class="line">  <span class="string">&quot;Company&quot;</span> =&gt; <span class="string">&quot;Google Inc&quot;</span>,</span><br><span class="line">  <span class="string">&quot;Email&quot;</span>   =&gt; <span class="string">&quot;test@163.com&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># The date the license starts. </span></span><br><span class="line"><span class="comment"># Required.</span></span><br><span class="line">license.starts_at         = Date.new(<span class="number">2019</span>, <span class="number">4</span>, <span class="number">24</span>) <span class="comment"># license 开始生效时间</span></span><br><span class="line"><span class="comment"># The date the license expires. </span></span><br><span class="line"><span class="comment"># Not required, to allow lifetime licenses.</span></span><br><span class="line">license.expires_at        = Date.new(<span class="number">2026</span>, <span class="number">4</span>, <span class="number">23</span>) <span class="comment"># license 到期时间</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The below dates are hardcoded in the license so that you can play with the</span></span><br><span class="line"><span class="comment"># period after which there are &quot;repercussions&quot; to license expiration.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The date admins will be notified about the license&#x27;s pending expiration. </span></span><br><span class="line"><span class="comment"># Not required.</span></span><br><span class="line">license.notify_admins_at  = Date.new(<span class="number">2026</span>, <span class="number">3</span>, <span class="number">23</span>) <span class="comment"># license 管理员过期提醒时间</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The date regular users will be notified about the license&#x27;s pending expiration.</span></span><br><span class="line"><span class="comment"># Not required.</span></span><br><span class="line">license.notify_users_at   = Date.new(<span class="number">2026</span>, <span class="number">3</span>, <span class="number">23</span>) <span class="comment"># license 普通用户过期提醒时间</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The date &quot;changes&quot; like code pushes, issue or merge request creation </span></span><br><span class="line"><span class="comment"># or modification and project creation will be blocked.</span></span><br><span class="line"><span class="comment"># Not required.</span></span><br><span class="line">license.block_changes_at  = Date.new(<span class="number">2026</span>, <span class="number">5</span>, <span class="number">7</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># Restrictions bundled with this license.</span></span><br><span class="line"><span class="comment"># Not required, to allow unlimited-user licenses for things like educational organizations.</span></span><br><span class="line">license.restrictions  = &#123;</span><br><span class="line">  <span class="comment"># The maximum allowed number of active users.</span></span><br><span class="line">  <span class="comment"># Not required.</span></span><br><span class="line">  <span class="symbol">active_user_count:</span> <span class="number">10000</span>  <span class="comment"># license 人数配额</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># We don&#x27;t currently have any other restrictions, but we might in the future.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">puts <span class="string">&quot;License:&quot;</span></span><br><span class="line">puts license</span><br><span class="line"></span><br><span class="line"><span class="comment"># Export the license, which encrypts and encodes it.</span></span><br><span class="line">data = license.export</span><br><span class="line"></span><br><span class="line">puts <span class="string">&quot;Exported license:&quot;</span></span><br><span class="line">puts data</span><br><span class="line"></span><br><span class="line"><span class="comment"># Write the license to a file to send to a customer.</span></span><br><span class="line">File.open(<span class="string">&quot;GitLabBV.gitlab-license&quot;</span>, <span class="string">&quot;w&quot;</span>) &#123; <span class="params">|f|</span> f.write(data) &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># In the customer&#x27;s application, load the public key from a file.</span></span><br><span class="line">public_key = OpenSSL::PKey::RSA.new File.read(<span class="string">&quot;license_key.pub&quot;</span>)</span><br><span class="line">Gitlab::License.encryption_key = public_key</span><br><span class="line"></span><br><span class="line"><span class="comment"># Read the license from a file.</span></span><br><span class="line">data = File.read(<span class="string">&quot;GitLabBV.gitlab-license&quot;</span>)  <span class="comment"># 生成license存储文件名</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Import the license, which decodes and decrypts it.</span></span><br><span class="line">$license = Gitlab::License.import(data)</span><br><span class="line"></span><br><span class="line">puts <span class="string">&quot;Imported license:&quot;</span></span><br><span class="line">puts $license</span><br><span class="line"></span><br><span class="line"><span class="comment"># Quit if the license is invalid</span></span><br><span class="line"><span class="keyword">unless</span> $license</span><br><span class="line">  raise <span class="string">&quot;The license is invalid.&quot;</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Quit if the active user count exceeds the allowed amount:</span></span><br><span class="line"><span class="keyword">if</span> $license.restricted?(<span class="symbol">:active_user_count</span>)</span><br><span class="line">  active_user_count = <span class="number">1000</span></span><br><span class="line">  <span class="keyword">if</span> active_user_count &gt; $license.restrictions[<span class="symbol">:active_user_count</span>]</span><br><span class="line">    raise <span class="string">&quot;The active user count exceeds the allowed amount!&quot;</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Show admins a message if the license is about to expire.</span></span><br><span class="line"><span class="keyword">if</span> $license.notify_admins?</span><br><span class="line">  puts <span class="string">&quot;The license is due to expire on <span class="subst">#&#123;$license.expires_at&#125;</span>.&quot;</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Show users a message if the license is about to expire.</span></span><br><span class="line"><span class="keyword">if</span> $license.notify_users?</span><br><span class="line">  puts <span class="string">&quot;The license is due to expire on <span class="subst">#&#123;$license.expires_at&#125;</span>.&quot;</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Block pushes when the license expired two weeks ago.</span></span><br><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">Gitlab</span></span></span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">GitAccess</span></span></span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">check</span><span class="params">(cmd, changes = <span class="literal">nil</span>)</span></span></span><br><span class="line">      <span class="keyword">if</span> $license.block_changes?</span><br><span class="line">        <span class="keyword">return</span> build_status_object(<span class="literal">false</span>, <span class="string">&quot;License expired&quot;</span>)</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">      <span class="comment"># Do other Git access verification</span></span><br><span class="line">      <span class="comment"># ...</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Show information about the license in the admin panel.</span></span><br><span class="line">puts <span class="string">&quot;This instance of GitLab Enterprise Edition is licensed to:&quot;</span></span><br><span class="line">$license.licensee.each <span class="keyword">do</span> <span class="params">|key, value|</span></span><br><span class="line">  puts <span class="string">&quot;<span class="subst">#&#123;key&#125;</span>: <span class="subst">#&#123;value&#125;</span>&quot;</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> $license.expired?</span><br><span class="line">  puts <span class="string">&quot;The license expired on <span class="subst">#&#123;$license.expires_at&#125;</span>&quot;</span></span><br><span class="line"><span class="keyword">elsif</span> $license.will_expire?</span><br><span class="line">  puts <span class="string">&quot;The license will expire on <span class="subst">#&#123;$license.expires_at&#125;</span>&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  puts <span class="string">&quot;The license will never expire.&quot;</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>执行以上license脚本文件，生成三个文件,</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">ruby createlicense.rb  <span class="comment"># 执行脚本生成如下内容</span></span><br><span class="line"></span><br><span class="line">License:</span><br><span class="line"><span class="comment">#&lt;Gitlab::License:0x00007fd08691eca0&gt;</span></span><br><span class="line">Exported license:</span><br><span class="line">eyJkYXRhIjoiWVo0VEIraWJQai8zUDhWRi9OK2Y3d2JXcG1ucVZGbXhUamtP</span><br><span class="line">S0QyY01BSG9XYlBLRlh0QUcvQ1UzMm9EXG5tU1RSd0pqUmlRT2hOOC9KOWJi</span><br><span class="line">Yk9mZ0krUmt5aWd2WnBNdGYydVZsUTFEemhFSU1jZWk5VjdtTWJycS9cbk9I</span><br><span class="line">V3BmMjR3TFFmcXhQdHVvNVFDbVd0Z2Njc2lNUXhPUzVxUTN0YkRvRDRhYTk2</span><br><span class="line">OVQvbjN4clc1RkNHZlxuUXU0TnZ1OHhqcjlZMTJIZk5yaVd3a2ZLZTBqZitU</span><br><span class="line">cExvem9GTk9QY2d5R3hGdEtkNGVUVzdpa0tQRUNCXG5IRmZYVlVydHdBU3Fm</span><br><span class="line">ei96WFNvaHRGVTFLWW1USkxMOFQ5eW5PTFdpQ1gycXRIYkF1T0hLV0N0bi9W</span><br><span class="line">dE5cbjViZ3VRd05xd2hSOHlNanB6SFhNNC9OemZMVkRVQ3ZTTndVZWR6Q2Q1</span><br><span class="line">Q3hrcE9BOEU1cFN5aXRiSTBkZ1xucTJ1ekJnSHNtdlVVdE5mbjFPUWtTc0FS</span><br><span class="line">dkE2QUxUdGs1ZXZZN3Z6SDJ5N3FMZz09XG4iLCJrZXkiOiJnZ200N1hvRnkr</span><br><span class="line">OTRYb09wcFh5akE1VVo0NTU5REhxeWhVVHMzVWV1dDhRRDRzZGpReVZwRGVp</span><br><span class="line">QkFuajZcblgvL2RvYnM5QVRyYlRZa0V0SEJadUN5bGR5dUhlbEhQSHdJNUxS</span><br><span class="line">RXgyeUpkb2NBRnRVVTNlTjdKcm9ZZ1xuVGJPaXk5c1E4eldNMWhZYWlWWDAy</span><br><span class="line">eDdpTGx6eHA3eDJVSWJpRkZZd2J1dmZXeGtiMk10dnVQdFdsOUt0XG5mcW91</span><br><span class="line">b0dYN0ZZclV1d3NWOGVNNTcyeS90elpMNFBLMFZvTE5vN3d6eEdveW1FbUNP</span><br><span class="line">Sm9kYXVNR0IydjNcbkVybnFac2xsdlo1ZThnNDFKMElLclhLZ1lEK2J3WUR1</span><br><span class="line">a1hqcHk4OU5GZHVaaGgzK3V5ZFNROWJwSC9wYVxuZjA4YUUwUzBkSzhyeTU2</span><br><span class="line">SzVnbEVweFRtc09SZlBTUmhSSVhnalZsYVB3PT1cbiIsIml2IjoiN1VLSTh0</span><br><span class="line">UXo0aFZ6bGV5QW9kSWFxQT09XG4ifQ==</span><br><span class="line">Imported license:</span><br><span class="line"><span class="comment">#&lt;Gitlab::License:0x00007fd086926f40&gt;</span></span><br><span class="line">This instance of GitLab Enterprise Edition is licensed to:</span><br><span class="line">Name: <span class="built_in">test</span></span><br><span class="line">Company: Google Inc</span><br><span class="line">Email: <span class="built_in">test</span>@163.com</span><br><span class="line">The license will expire on 2026-04-23</span><br><span class="line"></span><br><span class="line">ls . <span class="comment"># 查看当前目录下文件</span></span><br><span class="line">GitLabBV.gitlab-license createlicense.rb        license_key             license_key.pub</span><br></pre></td></tr></table></figure>
+<h3 id="3-替换公钥以及激活license"><a class="markdownIt-Anchor" href="#3-替换公钥以及激活license"></a> 3. 替换公钥以及激活license</h3>
+<ul>
+<li>
+<p>将createlicense.rb脚本文件生成的license_key.pub公钥内容替换到gitlab的<code>/opt/gitlab/embedded/service/gitlab-rails/.license_encryption_key.pub</code>中。然后重启gitlab，<code>gitlab-ctl restart</code>.</p>
+</li>
+<li>
+<p>重启完毕后，将脚本生成的GitLabBV.gitlab-license文件，导入gitlab激活页面即可激活了。</p>
+</li>
+</ul>
+<h3 id="4-修改gitlab-ee的等级为ultimate_plan"><a class="markdownIt-Anchor" href="#4-修改gitlab-ee的等级为ultimate_plan"></a> 4. 修改gitlab-ee的等级为ULTIMATE_PLAN</h3>
+<ul>
+<li>修改gitlab的文件</li>
+</ul>
+<p><code>vim /opt/gitlab/embedded/service/gitlab-rails/ee/app/models/license.rb</code></p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plan</span></span></span><br><span class="line">  restricted_attr(<span class="symbol">:plan</span>).presence <span class="params">||</span> STARTER_PLAN  <span class="comment">## 将STARTER_PLAN 修改为 ULTIMATE_PLAN</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="小问题"><a class="markdownIt-Anchor" href="#小问题"></a> 小问题</h3>
+<blockquote>
+<ul>
+<li>就是生成的license虽然可以激活，但是license页面老是报500错误。这个得看下后台日志排查下即可。</li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.shichanson.site/2019/12/23/crack-gitlab-ee-licence/" title="gitlab-ee 企业版自签许可证license" target="_blank" rel="external">https://blog.shichanson.site/2019/12/23/crack-gitlab-ee-licence/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/shichanson" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/shichanson" target="_blank"><span class="text-dark">Chanson Shi</span><small class="ml-1x">Golang Developer &amp; DevOps</small></a></h3>
+        <div>佛系90后、热爱新技术、科幻迷、赛博朋克。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/12/24/gitops-basic-concept/" title="GitOps 云原生持续交付方式"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2019/12/20/k8s-local-install/" title="本地搭建kubernetes环境"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone,wechat"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipay.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/weixin.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/shichanson" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/shichanson" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/shichanson" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://facebook.com/shichanson" target="_blank" title="Facebook" data-toggle=tooltip data-placement=top><i class="icon icon-facebook"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: true,
+    notify: true,
+    appId: 'B0DHQryRhputnORnDWxj85S9-gzGzoHsz',
+    appKey: 'k6BTEy2IxxPI70gQbhhDzi7P',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

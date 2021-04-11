@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>helm使用技巧篇 | Chanson Shi</title>
+  <meta name="description" content="helm 的核心优点在于 charts 一次编写到处运行以及其版本跟踪的能力。本篇博文主要讲述 helm 在本地开发 charts 时的一些技巧，通过这些技巧可以大大增加 charts 的易用性以及扩展性。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="helm使用技巧篇">
+<meta property="og:url" content="https://blog.shichanson.site/2019/01/03/magic-of-helm/index.html">
+<meta property="og:site_name" content="blog of home">
+<meta property="og:description" content="helm 的核心优点在于 charts 一次编写到处运行以及其版本跟踪的能力。本篇博文主要讲述 helm 在本地开发 charts 时的一些技巧，通过这些技巧可以大大增加 charts 的易用性以及扩展性。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-01-03T04:23:50.000Z">
+<meta property="article:modified_time" content="2019-01-03T04:23:50.000Z">
+<meta property="article:author" content="Chanson Shi">
+<meta property="article:tag" content="helm">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.shichanson.site/2019/01/03/magic-of-helm/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="blog of home" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+
+<body class="main-center theme-purple" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/shichanson" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Chanson Shi</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Golang Developer &amp; DevOps</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shanghai, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/shichanson" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/shichanson" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/shichanson" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://facebook.com/shichanson" target="_blank" title="Facebook" data-toggle=tooltip data-placement=top><i class="icon icon-facebook"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                微信公众号：<b>低烈度程序员</b></br> <img src="/images/wxgzh.jpg" width="140" height="140">
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Coding/">Coding</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Container-Cloud/">Container Cloud</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/DevOps/">DevOps</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/GitOps/">GitOps</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ops/">Ops</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/frontend/">frontend</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmd/" rel="tag">cmd</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/" rel="tag">gitlab</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitops/" rel="tag">gitops</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/" rel="tag">helm</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/" rel="tag">kubernetes</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/story/" rel="tag">story</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/" rel="tag">tools</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zoom/" rel="tag">zoom</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF%E8%B7%A8%E5%9F%9F/" rel="tag">前端跨域</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA/" rel="tag">机器人</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/cmd/" style="font-size: 13px;">cmd</a> <a href="/tags/gitlab/" style="font-size: 13.67px;">gitlab</a> <a href="/tags/gitops/" style="font-size: 13px;">gitops</a> <a href="/tags/helm/" style="font-size: 13.33px;">helm</a> <a href="/tags/kubernetes/" style="font-size: 13.33px;">kubernetes</a> <a href="/tags/story/" style="font-size: 13px;">story</a> <a href="/tags/tools/" style="font-size: 14px;">tools</a> <a href="/tags/zoom/" style="font-size: 13px;">zoom</a> <a href="/tags/%E5%89%8D%E7%AB%AF%E8%B7%A8%E5%9F%9F/" style="font-size: 13px;">前端跨域</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA/" style="font-size: 13px;">机器人</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13px;">算法</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled ">
+        
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/09/20/macos-init-env/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Tools/">Tools</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/20/macos-init-env/" class="title">如何快速初始化 MacOS 开发环境</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-20T12:25:23.000Z" itemprop="datePublished">2020-09-20</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/09/16/vmwareworkstation_16_pro_license/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Ops/">Ops</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/16/vmwareworkstation_16_pro_license/" class="title">VMware Workstation Pro 16 内置容器工具vctl彻底替换docker（内含批量激活密钥）</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-16T12:25:23.000Z" itemprop="datePublished">2020-09-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/08/09/oss-crossdomain-ssl/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/frontend/">frontend</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/08/09/oss-crossdomain-ssl/" class="title">基于阿里云OSS解决前端图片跨域的问题</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-08-09T03:25:23.000Z" itemprop="datePublished">2020-08-09</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/08/06/gcp-install-gfw-v2ray-server/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Ops/">Ops</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/08/06/gcp-install-gfw-v2ray-server/" class="title">搭建免费科学上网服务器v2ray</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-08-06T12:25:23.000Z" itemprop="datePublished">2020-08-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/06/04/install-ros-melodic-ubuntu-18-04/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/ROS/">ROS</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/04/install-ros-melodic-ubuntu-18-04/" class="title">基于Ubuntu安装ROS 系统（melodic版本）</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-04T02:25:23.000Z" itemprop="datePublished">2020-06-04</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-magic-of-helm" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      helm使用技巧篇
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/01/03/magic-of-helm/" class="article-date">
+	  <time datetime="2019-01-03T04:23:50.000Z" itemprop="datePublished">2019-01-03</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Container-Cloud/">Container Cloud</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/helm/" rel="tag">helm</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/01/03/magic-of-helm/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 2.1k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 10(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>helm 的核心优点在于 charts 一次编写到处运行以及其版本跟踪的能力。本篇博文主要讲述 helm 在本地开发 charts 时的一些技巧，通过这些技巧可以大大增加 charts 的易用性以及扩展性。</p>
+<a id="more"></a>
+<p><strong>针对 helm 篇的实践落地方案分为如下几个部分：</strong></p>
+<blockquote>
+<ul>
+<li>helm 基础理论篇</li>
+<li>helm 使用技巧篇</li>
+<li>基础中间件服务运维篇</li>
+<li>微服务应用版本管理篇</li>
+<li>基于 jenkins + helm 的 CICD 方案</li>
+<li>Helm 实践趟坑篇</li>
+<li>基于 Helm Istio Jenkins 灰度发布实践方案</li>
+</ul>
+</blockquote>
+<p>本篇博文是该系列博客中的第二篇文章**《helm 的使用技巧》**。社区以及官方文档大多提供的是针对单个服务的 charts 编写指导。对于有依赖关系的多个服务时也是通过子 charts 的方式来实现多服务组件部署，但是本质上还是一个 charts 一个服务。这对于动辄十来个组件的微服务架构应用来说，显然是不可取的方案。针对微服务应用场景，我们总结一些 helm 撰写 charts 的最佳实践。</p>
+<h3 id="debug-调试妙用"><a class="markdownIt-Anchor" href="#debug-调试妙用"></a> debug 调试妙用</h3>
+<p><strong>使用场景：</strong></p>
+<p><strong>helm</strong> 应用发布工具一般很少单独使用，在企业中的应用一般都是作为 DevOps 工具链中的一环。我们在做基础服务运维的时候一般都应该遵循一个基本原则“<strong>infra as code</strong>”。这样可以确保基础服务的可控和可追溯性。为了避免 charts 在实际运行中出错，我们可以在本地写 charts 的时候通过 debug 的功能，在不生成具体 release 的情况下检查 charts 是否存在语法错误和内容错误。</p>
+<p><strong>实践总结：</strong></p>
+<p>使用 Debug 功能的前提需要一个 k8s 集群且本地 helm 能够连接上该集群。最佳实践是尽可能确保本地 k8s 环境能与测试以及生产环境保持一致，这样才能确保 charts 的兼容性。笔者就遇到过这样的问题，charts 中包含了阿里云的日志服务 yaml 模板，在本地 minikube 集群上使用 helm 工具 debug 的时候总是报错的情况。最后将本地的 helm 工具直接连接阿里云上的 k8s 集群上，才顺利 debug。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><span class="line">helm install --dry-run --debug --name <span class="built_in">test</span> tomcat</span><br><span class="line">[debug] Created tunnel using <span class="built_in">local</span> port: <span class="string">&#x27;51358&#x27;</span></span><br><span class="line"></span><br><span class="line">[debug] SERVER: <span class="string">&quot;127.0.0.1:51358&quot;</span></span><br><span class="line"></span><br><span class="line">[debug] Original chart version: <span class="string">&quot;&quot;</span></span><br><span class="line">[debug] CHART PATH: /Users/mayershi/akd/charts/stable/tomcat</span><br><span class="line"></span><br><span class="line">NAME:   <span class="built_in">test</span></span><br><span class="line">REVISION: 1</span><br><span class="line">RELEASED: Sat Mar 16 12:49:23 2019</span><br><span class="line">CHART: tomcat-0.2.0</span><br><span class="line">USER-SUPPLIED VALUES:</span><br><span class="line">&#123;&#125;</span><br><span class="line"></span><br><span class="line">COMPUTED VALUES:</span><br><span class="line">affinity: &#123;&#125;</span><br><span class="line">deploy:</span><br><span class="line">  directory: /usr/<span class="built_in">local</span>/tomcat/webapps</span><br><span class="line">image:</span><br><span class="line">  pullPolicy: IfNotPresent</span><br><span class="line">  pullSecrets: []</span><br><span class="line">  tomcat:</span><br><span class="line">    repository: tomcat</span><br><span class="line">    tag: <span class="string">&quot;7.0&quot;</span></span><br><span class="line">  webarchive:</span><br><span class="line">    repository: ananwaresystems/webarchive</span><br><span class="line">    tag: <span class="string">&quot;1.0&quot;</span></span><br><span class="line">ingress:</span><br><span class="line">  annotations: &#123;&#125;</span><br><span class="line">  enabled: <span class="literal">false</span></span><br><span class="line">  hosts:</span><br><span class="line">  - chart-example.local</span><br><span class="line">  path: /</span><br><span class="line">  tls: []</span><br><span class="line">livenessProbe:</span><br><span class="line">  initialDelaySeconds: 60</span><br><span class="line">  path: /sample</span><br><span class="line">  periodSeconds: 30</span><br><span class="line">nodeSelector: &#123;&#125;</span><br><span class="line">readinessProbe:</span><br><span class="line">  failureThreshold: 6</span><br><span class="line">  initialDelaySeconds: 60</span><br><span class="line">  path: /sample</span><br><span class="line">  periodSeconds: 30</span><br><span class="line">replicaCount: 1</span><br><span class="line">resources: &#123;&#125;</span><br><span class="line">service:</span><br><span class="line">  externalPort: 80</span><br><span class="line">  internalPort: 8080</span><br><span class="line">  name: http</span><br><span class="line">  <span class="built_in">type</span>: LoadBalancer</span><br><span class="line">tolerations: []</span><br><span class="line"></span><br><span class="line">HOOKS:</span><br><span class="line">MANIFEST:</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"><span class="comment"># Source: tomcat/templates/appsrv-svc.yaml</span></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: <span class="built_in">test</span>-tomcat</span><br><span class="line">  labels:</span><br><span class="line">    app: tomcat</span><br><span class="line">    chart: tomcat-0.2.0</span><br><span class="line">    release: <span class="built_in">test</span></span><br><span class="line">    heritage: Tiller</span><br><span class="line">spec:</span><br><span class="line">  <span class="built_in">type</span>: LoadBalancer</span><br><span class="line">  ports:</span><br><span class="line">    - port: 80</span><br><span class="line">      targetPort: 8080</span><br><span class="line">      protocol: TCP</span><br><span class="line">      name: http</span><br><span class="line">  selector:</span><br><span class="line">    app: tomcat</span><br><span class="line">    release: <span class="built_in">test</span></span><br><span class="line">---</span><br><span class="line"><span class="comment"># Source: tomcat/templates/appsrv.yaml</span></span><br><span class="line">apiVersion: apps/v1beta2</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: <span class="built_in">test</span>-tomcat</span><br><span class="line">  labels:</span><br><span class="line">    app: tomcat</span><br><span class="line">    chart: tomcat-0.2.0</span><br><span class="line">    release: <span class="built_in">test</span></span><br><span class="line">    heritage: Tiller</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: tomcat</span><br><span class="line">      release: <span class="built_in">test</span></span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: tomcat</span><br><span class="line">        release: <span class="built_in">test</span></span><br><span class="line">    spec:</span><br><span class="line">      volumes:</span><br><span class="line">        - name: app-volume</span><br><span class="line">          emptyDir: &#123;&#125;</span><br><span class="line">      initContainers:</span><br><span class="line">        - name: war</span><br><span class="line">          image: ananwaresystems/webarchive:1.0</span><br><span class="line">          imagePullPolicy: IfNotPresent</span><br><span class="line">          <span class="built_in">command</span>:</span><br><span class="line">            - <span class="string">&quot;sh&quot;</span></span><br><span class="line">            - <span class="string">&quot;-c&quot;</span></span><br><span class="line">            - <span class="string">&quot;cp /*.war /app&quot;</span></span><br><span class="line">          volumeMounts:</span><br><span class="line">            - name: app-volume</span><br><span class="line">              mountPath: /app</span><br><span class="line">      containers:</span><br><span class="line">        - name: tomcat</span><br><span class="line">          image: tomcat:7.0</span><br><span class="line">          imagePullPolicy: IfNotPresent</span><br><span class="line">          volumeMounts:</span><br><span class="line">            - name: app-volume</span><br><span class="line">              mountPath: /usr/<span class="built_in">local</span>/tomcat/webapps</span><br><span class="line">          ports:</span><br><span class="line">            - containerPort: 8080</span><br><span class="line">              hostPort: 8009</span><br><span class="line">          livenessProbe:</span><br><span class="line">            httpGet:</span><br><span class="line">              path: /sample</span><br><span class="line">              port: 8080</span><br><span class="line">            initialDelaySeconds: 60</span><br><span class="line">            periodSeconds: 30</span><br><span class="line">          readinessProbe:</span><br><span class="line">            httpGet:</span><br><span class="line">              path: /sample</span><br><span class="line">              port: 8080</span><br><span class="line">            initialDelaySeconds: 60</span><br><span class="line">            periodSeconds: 30</span><br><span class="line">            failureThreshold: 6</span><br><span class="line">          resources:</span><br><span class="line">            &#123;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="多组件利器数组"><a class="markdownIt-Anchor" href="#多组件利器数组"></a> 多组件利器数组</h3>
+<p>在社区以及一些其他同行的博客教程中一般都是单个服务单个 charts 的方式，但是这种对于采用了微服务架构的应用是有问题的。有很多的缺陷，比如： 不能对应用进行统一的版本管理；需要编写大量的 charts 效率不高。那么解决这个问就需要引入 helm 的控制结构。</p>
+<p><strong>helm 循环控制结构：</strong></p>
+<p>values.yaml 值文件部分示例内容。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">app1</span></span><br><span class="line">    <span class="attr">replicaCount:</span> <span class="number">2</span></span><br><span class="line">    <span class="attr">image:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">app1:1</span></span><br><span class="line">      <span class="attr">repository:</span> <span class="string">dockerhub.com</span></span><br><span class="line">      <span class="attr">pullPolicy:</span> <span class="string">Always</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">service:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">ClusterIP</span></span><br><span class="line">      <span class="attr">externalPort:</span> <span class="number">8080</span></span><br><span class="line">      <span class="attr">internalPort:</span> <span class="number">8080</span></span><br><span class="line">      <span class="attr">healthUrl:</span> <span class="string">/token</span></span><br><span class="line">      <span class="attr">managementPort:</span> <span class="number">8080</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">container:</span></span><br><span class="line">      <span class="attr">spring:</span> <span class="literal">false</span></span><br><span class="line">      <span class="attr">limitmemory:</span> <span class="string">256Mi</span></span><br><span class="line">      <span class="attr">env:</span> &#123;&#125;</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">app2</span></span><br><span class="line">    <span class="attr">replicaCount:</span> <span class="number">2</span></span><br><span class="line">    <span class="attr">image:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">app2:1</span></span><br><span class="line">      <span class="attr">repository:</span> <span class="string">dockerhub.com</span></span><br><span class="line">      <span class="attr">pullPolicy:</span> <span class="string">Always</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">service:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">ClusterIP</span></span><br><span class="line">      <span class="attr">externalPort:</span> <span class="number">12180</span></span><br><span class="line">      <span class="attr">internalPort:</span> <span class="number">12180</span></span><br><span class="line">      <span class="attr">healthUrl:</span> <span class="string">&quot;/manage/status&quot;</span></span><br><span class="line">      <span class="attr">managementPort:</span> <span class="number">12181</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">container:</span></span><br><span class="line">      <span class="attr">memory:</span> <span class="string">2048Mi</span></span><br><span class="line">      <span class="attr">limitmemory:</span> <span class="string">2048Mi</span></span><br><span class="line">      <span class="attr">spring:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">hpa:</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">memory</span></span><br><span class="line">        <span class="attr">value:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">env:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">ALI_LOGSTORE</span></span><br><span class="line">          <span class="attr">value:</span> <span class="string">app2</span></span><br></pre></td></tr></table></figure>
+<p>deploy 和 service 模板文件内容：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;<span class="bullet">-</span> <span class="string">range</span> <span class="string">$index</span>, <span class="string">$container</span> <span class="string">:=</span> <span class="string">.Values.containers</span> &#125;&#125; <span class="string">//</span> <span class="string">由于helm是golang开发的所以，对于控制结构来说，他的循环控制结构和golang保持一致。通过这个循环控制结构可以将value值文件中的containers值下面的数组给遍历出来生成相应的deploy</span> <span class="string">和</span> <span class="string">service</span> <span class="string">的k8s的资源。</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1beta2</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> &#123;&#123; <span class="string">$fullname</span> &#125;&#125;<span class="string">-&#123;&#123;</span> <span class="string">$container.name</span> <span class="string">&#125;&#125;</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> &#123;&#123; <span class="string">$fullname</span> &#125;&#125;<span class="string">-&#123;&#123;</span> <span class="string">$container.name</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">chart:</span> &#123;&#123; <span class="string">$chartname</span> &#125;&#125;</span><br><span class="line">    <span class="attr">release:</span> &#123;&#123; <span class="string">$root.Release.Name</span> &#125;&#125;</span><br><span class="line">    <span class="attr">heritage:</span> &#123;&#123; <span class="string">$root.Release.Service</span> &#125;&#125;</span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> &#123;&#123; <span class="string">$container.replicaCount</span> &#125;&#125;</span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span>  <span class="string">&quot;<span class="template-variable">&#123;&#123; $fullname &#125;&#125;</span>-<span class="template-variable">&#123;&#123; $container.name &#125;&#125;</span>&quot;</span></span><br><span class="line">      <span class="attr">release:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; $root.Release.Name &#125;&#125;</span>&quot;</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; $fullname &#125;&#125;</span>-<span class="template-variable">&#123;&#123; $container.name &#125;&#125;</span>&quot;</span></span><br><span class="line">        <span class="attr">release:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; $root.Release.Name &#125;&#125;</span>&quot;</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">imagePullSecrets:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">aliyun-registry-secret</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span>  &#123;&#123; <span class="string">$fullname</span> &#125;&#125;<span class="string">-&#123;&#123;</span> <span class="string">$container.name</span> <span class="string">&#125;&#125;</span></span><br><span class="line">        <span class="attr">image:</span> &#123;&#123; <span class="string">$container.image.repository</span> &#125;&#125;<span class="string">/&#123;&#123;</span> <span class="string">$container.image.name</span> <span class="string">&#125;&#125;</span></span><br><span class="line">        <span class="attr">imagePullPolicy:</span> &#123;&#123; <span class="string">$container.image.pullPolicy</span> &#125;&#125;</span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> &#123;&#123; <span class="string">$container.service.internalPort</span> &#125;&#125;</span><br><span class="line">        &#123;&#123; <span class="string">if</span> <span class="string">$container.service.healthUrl</span> &#125;&#125;</span><br><span class="line">        <span class="attr">livenessProbe:</span></span><br><span class="line">          <span class="attr">httpGet:</span></span><br><span class="line">            <span class="attr">path:</span> &#123;&#123; <span class="string">$container.service.healthUrl</span> &#125;&#125;</span><br><span class="line">            <span class="attr">port:</span> &#123;&#123; <span class="string">$container.service.managementPort</span> &#125;&#125;</span><br><span class="line">          <span class="attr">initialDelaySeconds:</span> <span class="number">60</span></span><br><span class="line">          <span class="attr">timeoutSeconds:</span> <span class="number">10</span></span><br><span class="line">          <span class="attr">periodSeconds:</span> <span class="number">30</span></span><br><span class="line">          <span class="attr">successThreshold:</span> <span class="number">1</span></span><br><span class="line">          <span class="attr">failureThreshold:</span> <span class="number">5</span></span><br><span class="line">        <span class="attr">readinessProbe:</span></span><br><span class="line">          <span class="attr">httpGet:</span></span><br><span class="line">            <span class="attr">path:</span> &#123;&#123; <span class="string">$container.service.healthUrl</span> &#125;&#125;</span><br><span class="line">            <span class="attr">port:</span> &#123;&#123; <span class="string">$container.service.managementPort</span> &#125;&#125;</span><br><span class="line">          <span class="attr">initialDelaySeconds:</span> <span class="number">60</span></span><br><span class="line">          <span class="attr">timeoutSeconds:</span> <span class="number">10</span></span><br><span class="line">          <span class="attr">periodSeconds:</span> <span class="number">30</span></span><br><span class="line">          <span class="attr">successThreshold:</span> <span class="number">1</span></span><br><span class="line">          <span class="attr">failureThreshold:</span> <span class="number">5</span></span><br><span class="line">        &#123;&#123; <span class="string">end</span> &#125;&#125;</span><br><span class="line">        <span class="attr">env:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">aliyun_logs_image_tags</span></span><br><span class="line">            <span class="attr">value:</span> <span class="string">docker-image=&#123;&#123;</span> <span class="string">$container.image.repository</span> <span class="string">&#125;&#125;/&#123;&#123;</span> <span class="string">$container.image.name</span> <span class="string">&#125;&#125;</span></span><br><span class="line">          &#123;&#123; <span class="string">if</span> <span class="string">$container.container.spring</span> &#125;&#125;</span><br><span class="line">          <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">JAVA_OPTIONS</span></span><br><span class="line">            <span class="attr">value:</span> <span class="string">&gt;-</span></span><br><span class="line">              <span class="string">-XX:+UseG1GC</span></span><br><span class="line">              <span class="string">-XX:+HeapDumpOnOutOfMemoryError</span></span><br><span class="line">              <span class="string">-Duser.timezone=Asia/Hong_Kong</span></span><br><span class="line">              <span class="string">-Dspring.profiles.active=&#123;&#123;</span> <span class="string">$root.Values.container.spring.profile</span> <span class="string">&#125;&#125;</span></span><br><span class="line">          &#123;&#123; <span class="string">end</span> &#125;&#125;</span><br><span class="line">&#123;&#123; <span class="string">if</span> <span class="string">$container.container.env</span> &#125;&#125;</span><br><span class="line">&#123;&#123; <span class="string">toYaml</span> <span class="string">$container.container.env</span> <span class="string">|</span> <span class="string">indent</span> <span class="number">10</span> &#125;&#125;</span><br><span class="line">&#123;&#123; <span class="string">end</span> &#125;&#125;</span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">        &#123;&#123; <span class="string">if</span> <span class="string">or</span> <span class="string">$container.container.cpu</span> <span class="string">$container.container.memory</span> &#125;&#125;</span><br><span class="line">          <span class="attr">requests:</span></span><br><span class="line">          &#123;&#123; <span class="string">if</span> <span class="string">$container.container.cpu</span> &#125;&#125;</span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; $container.container.cpu &#125;&#125;</span>&quot;</span></span><br><span class="line">          &#123;&#123; <span class="string">end</span> &#125;&#125;</span><br><span class="line">          &#123;&#123; <span class="string">if</span> <span class="string">$container.container.memory</span> &#125;&#125;</span><br><span class="line">            <span class="attr">memory:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; $container.container.memory &#125;&#125;</span>&quot;</span></span><br><span class="line">          &#123;&#123; <span class="string">end</span> &#125;&#125;</span><br><span class="line">        &#123;&#123; <span class="string">end</span> &#125;&#125;</span><br><span class="line">        &#123;&#123; <span class="string">if</span> <span class="string">or</span> <span class="string">$container.container.limitcpu</span> <span class="string">$container.container.limitmemory</span> &#125;&#125;</span><br><span class="line">          <span class="attr">limits:</span></span><br><span class="line">          &#123;&#123; <span class="string">if</span> <span class="string">$container.container.limitcpu</span> &#125;&#125;</span><br><span class="line">            <span class="attr">cpu:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; $container.container.limitcpu &#125;&#125;</span>&quot;</span></span><br><span class="line">          &#123;&#123; <span class="string">end</span> &#125;&#125;</span><br><span class="line">          &#123;&#123; <span class="string">if</span> <span class="string">$container.container.limitmemory</span> &#125;&#125;</span><br><span class="line">            <span class="attr">memory:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123; $container.container.limitmemory &#125;&#125;</span>&quot;</span></span><br><span class="line">          &#123;&#123; <span class="string">end</span> &#125;&#125;</span><br><span class="line">        &#123;&#123; <span class="string">end</span> &#125;&#125;</span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> &#123;&#123; <span class="string">$serviceprefix</span> &#125;&#125;<span class="string">-&#123;&#123;</span> <span class="string">$container.name</span> <span class="string">&#125;&#125;</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> &#123;&#123; <span class="string">$name</span> &#125;&#125;</span><br><span class="line">    <span class="attr">chart:</span> &#123;&#123; <span class="string">$chartname</span> &#125;&#125;</span><br><span class="line">    <span class="attr">release:</span> &#123;&#123; <span class="string">$root.Release.Name</span> &#125;&#125;</span><br><span class="line">    <span class="attr">heritage:</span> &#123;&#123; <span class="string">$root.Release.Service</span> &#125;&#125;</span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">type:</span> &#123;&#123; <span class="string">$container.service.type</span> &#125;&#125;</span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">port:</span> &#123;&#123; <span class="string">$container.service.externalPort</span> &#125;&#125;</span><br><span class="line">      <span class="attr">targetPort:</span> &#123;&#123; <span class="string">$container.service.internalPort</span> &#125;&#125;</span><br><span class="line">      <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="attr">name:</span> &#123;&#123; <span class="string">$fullname</span> &#125;&#125;<span class="string">-&#123;&#123;</span> <span class="string">$container.name</span> <span class="string">&#125;&#125;-http</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> &#123;&#123; <span class="string">$fullname</span> &#125;&#125;<span class="string">-&#123;&#123;</span> <span class="string">$container.name</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">release:</span> &#123;&#123; <span class="string">$root.Release.Name</span> &#125;&#125;</span><br><span class="line">&#123;&#123;<span class="bullet">-</span> <span class="string">end</span> &#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>将 values.yaml 值文件 和 deploy-server.yaml 模板文件通过 helm 渲染得出真正的 deploy 的 yaml 以及 service 的 yaml 文件。然后 k8s 接受到后，会生成相应的资源。</p>
+<h3 id="组件个性化开关"><a class="markdownIt-Anchor" href="#组件个性化开关"></a> 组件个性化开关</h3>
+<p>每个应用的配置以及运行状态是不一样的,比如: java 启动的参数，node 应用的启动环境变量等等，所以就涉及到应用个性化参数开关的问题，那么解决这个的方案就是 helm 的条件控制结构。<br />
+<strong>helm 条件控制结构</strong><br />
+上面的实例文件中 containers 的数组的每个想内部存的是单个 deploy + service 的 value 值。从文件中可以看出差异部分。<br />
+第一个服务组件的值文件 spring 的值是 false。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">```</span></span><br><span class="line"></span><br><span class="line"><span class="string">第二个服务组件的值文件</span> <span class="string">spring</span> <span class="string">的值是</span> <span class="literal">true</span><span class="string">。</span></span><br><span class="line"></span><br><span class="line"><span class="string">```yaml</span></span><br><span class="line"><span class="attr">container:</span></span><br><span class="line">  <span class="attr">memory:</span> <span class="string">2048Mi</span></span><br><span class="line">  <span class="attr">limitmemory:</span> <span class="string">2048Mi</span></span><br><span class="line">  <span class="attr">spring:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">hpa:</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">memory</span></span><br><span class="line">    <span class="attr">value:</span> <span class="number">80</span></span><br><span class="line">  <span class="attr">env:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">ALI_LOGSTORE</span></span><br><span class="line">      <span class="attr">value:</span> <span class="string">app2</span></span><br></pre></td></tr></table></figure>
+<p>deploy-service.yaml 文件中关于这块的文件描述是这样的。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">env:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">aliyun_logs_image_tags</span></span><br><span class="line">    <span class="attr">value:</span> <span class="string">docker-image=&#123;&#123;</span> <span class="string">$container.image.repository</span> <span class="string">&#125;&#125;/&#123;&#123;</span> <span class="string">$container.image.name</span> <span class="string">&#125;&#125;</span></span><br><span class="line">  &#123;&#123; <span class="string">if</span> <span class="string">$container.container.spring</span> &#125;&#125;</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">JAVA_OPTIONS</span></span><br><span class="line">    <span class="attr">value:</span> <span class="string">&gt;-</span></span><br><span class="line">      <span class="string">-XX:+UseG1GC</span></span><br><span class="line">      <span class="string">-XX:+HeapDumpOnOutOfMemoryError</span></span><br><span class="line">      <span class="string">-Duser.timezone=Asia/Hong_Kong</span></span><br><span class="line">      <span class="string">-Dspring.profiles.active=&#123;&#123;</span> <span class="string">$root.Values.container.spring.profile</span> <span class="string">&#125;&#125;</span></span><br><span class="line">  &#123;&#123; <span class="string">end</span> &#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果就是当 spring 值是 true 的时候。env 的内容就会添加 Java 启动的环境变量参数。spring 值为 false 的时候就不会添加该环境变量。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.shichanson.site/2019/01/03/magic-of-helm/" title="helm使用技巧篇" target="_blank" rel="external">https://blog.shichanson.site/2019/01/03/magic-of-helm/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/shichanson" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/shichanson" target="_blank"><span class="text-dark">Chanson Shi</span><small class="ml-1x">Golang Developer &amp; DevOps</small></a></h3>
+        <div>佛系90后、热爱新技术、科幻迷、赛博朋克。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/05/05/coding-py/" title="算法解析-二分查找"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/12/11/helm-basic/" title="helm基础概念"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone,wechat"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipay.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/weixin.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/shichanson" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/shichanson" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/shichanson" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://facebook.com/shichanson" target="_blank" title="Facebook" data-toggle=tooltip data-placement=top><i class="icon icon-facebook"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: true,
+    notify: true,
+    appId: 'B0DHQryRhputnORnDWxj85S9-gzGzoHsz',
+    appKey: 'k6BTEy2IxxPI70gQbhhDzi7P',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

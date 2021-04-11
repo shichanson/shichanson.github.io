@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://blog.shichanson.site/about/index.html</loc>
+    
+    <lastmod>2021-04-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/categories/index.html</loc>
+    
+    <lastmod>2021-04-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/links/index.html</loc>
+    
+    <lastmod>2021-04-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/repository/index.html</loc>
+    
+    <lastmod>2021-04-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/tags/index.html</loc>
+    
+    <lastmod>2021-04-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2020/09/20/macos-init-env/</loc>
+    
+    <lastmod>2020-09-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2020/09/16/vmwareworkstation_16_pro_license/</loc>
+    
+    <lastmod>2020-09-16</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2020/08/09/oss-crossdomain-ssl/</loc>
+    
+    <lastmod>2020-08-09</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2020/08/06/gcp-install-gfw-v2ray-server/</loc>
+    
+    <lastmod>2020-08-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2020/06/04/install-ros-melodic-ubuntu-18-04/</loc>
+    
+    <lastmod>2020-06-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2019/12/26/zoom-not-connect/</loc>
+    
+    <lastmod>2019-12-26</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2019/12/24/gitops-basic-concept/</loc>
+    
+    <lastmod>2019-12-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2019/12/23/crack-gitlab-ee-licence/</loc>
+    
+    <lastmod>2019-12-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2019/12/20/k8s-local-install/</loc>
+    
+    <lastmod>2019-12-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2019/12/19/gitlab-install-docker/</loc>
+    
+    <lastmod>2019-12-19</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2019/12/19/curl-ip/</loc>
+    
+    <lastmod>2019-12-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2019/12/01/k8s-cloud-001/</loc>
+    
+    <lastmod>2019-12-01</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2019/11/21/k8s-jenkins-ops/</loc>
+    
+    <lastmod>2019-11-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2019/11/20/docker-shadowsocks-install/</loc>
+    
+    <lastmod>2019-11-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2019/05/19/gitlab-ops/</loc>
+    
+    <lastmod>2019-05-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2019/05/05/coding-py/</loc>
+    
+    <lastmod>2019-05-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2019/01/03/magic-of-helm/</loc>
+    
+    <lastmod>2019-01-03</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2018/12/11/helm-basic/</loc>
+    
+    <lastmod>2018-12-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/2018/11/22/%E5%88%9B%E4%B8%96%E7%BA%AA/</loc>
+    
+    <lastmod>2018-11-22</lastmod>
+    
+  </url>
+  
+
+  <url>
+    <loc>https://blog.shichanson.site/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>https://blog.shichanson.site/tags/%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/tags/gitlab/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/tags/cmd/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/tags/tools/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/tags/gitops/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/tags/helm/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/tags/kubernetes/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/tags/%E5%89%8D%E7%AB%AF%E8%B7%A8%E5%9F%9F/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/tags/zoom/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/tags/story/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  
+  <url>
+    <loc>https://blog.shichanson.site/categories/Coding/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/categories/DevOps/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/categories/Ops/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/categories/GitOps/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/categories/Container-Cloud/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/categories/ROS/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/categories/Tools/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/categories/frontend/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.shichanson.site/categories/Story/</loc>
+    <lastmod>2021-04-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+</urlset>

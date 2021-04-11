@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>helm基础概念 | Chanson Shi</title>
+  <meta name="description" content="Kubernetes的巨大成功创造了一个工具生态系统，可以简化应用程序开发和部署的复杂性。而该系列文章主要分享helm在噼里啪技术团队的生产实践经验总结。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="helm基础概念">
+<meta property="og:url" content="https://blog.shichanson.site/2018/12/11/helm-basic/index.html">
+<meta property="og:site_name" content="blog of home">
+<meta property="og:description" content="Kubernetes的巨大成功创造了一个工具生态系统，可以简化应用程序开发和部署的复杂性。而该系列文章主要分享helm在噼里啪技术团队的生产实践经验总结。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.shichanson.site/media/posts/media/release.png">
+<meta property="article:published_time" content="2018-12-10T18:28:13.000Z">
+<meta property="article:modified_time" content="2018-12-10T18:28:13.000Z">
+<meta property="article:author" content="Chanson Shi">
+<meta property="article:tag" content="helm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.shichanson.site/media/posts/media/release.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.shichanson.site/2018/12/11/helm-basic/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="blog of home" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+
+<body class="main-center theme-purple" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/shichanson" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Chanson Shi</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Golang Developer &amp; DevOps</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shanghai, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/shichanson" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/shichanson" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/shichanson" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://facebook.com/shichanson" target="_blank" title="Facebook" data-toggle=tooltip data-placement=top><i class="icon icon-facebook"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                微信公众号：<b>低烈度程序员</b></br> <img src="/images/wxgzh.jpg" width="140" height="140">
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Coding/">Coding</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Container-Cloud/">Container Cloud</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/DevOps/">DevOps</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/GitOps/">GitOps</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ops/">Ops</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tools/">Tools</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/frontend/">frontend</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmd/" rel="tag">cmd</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/" rel="tag">gitlab</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitops/" rel="tag">gitops</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/" rel="tag">helm</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/" rel="tag">kubernetes</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/story/" rel="tag">story</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/" rel="tag">tools</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zoom/" rel="tag">zoom</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF%E8%B7%A8%E5%9F%9F/" rel="tag">前端跨域</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA/" rel="tag">机器人</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/cmd/" style="font-size: 13px;">cmd</a> <a href="/tags/gitlab/" style="font-size: 13.67px;">gitlab</a> <a href="/tags/gitops/" style="font-size: 13px;">gitops</a> <a href="/tags/helm/" style="font-size: 13.33px;">helm</a> <a href="/tags/kubernetes/" style="font-size: 13.33px;">kubernetes</a> <a href="/tags/story/" style="font-size: 13px;">story</a> <a href="/tags/tools/" style="font-size: 14px;">tools</a> <a href="/tags/zoom/" style="font-size: 13px;">zoom</a> <a href="/tags/%E5%89%8D%E7%AB%AF%E8%B7%A8%E5%9F%9F/" style="font-size: 13px;">前端跨域</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA/" style="font-size: 13px;">机器人</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13px;">算法</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled ">
+        
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/09/20/macos-init-env/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Tools/">Tools</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/20/macos-init-env/" class="title">如何快速初始化 MacOS 开发环境</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-20T12:25:23.000Z" itemprop="datePublished">2020-09-20</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/09/16/vmwareworkstation_16_pro_license/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Ops/">Ops</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/16/vmwareworkstation_16_pro_license/" class="title">VMware Workstation Pro 16 内置容器工具vctl彻底替换docker（内含批量激活密钥）</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-16T12:25:23.000Z" itemprop="datePublished">2020-09-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/08/09/oss-crossdomain-ssl/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/frontend/">frontend</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/08/09/oss-crossdomain-ssl/" class="title">基于阿里云OSS解决前端图片跨域的问题</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-08-09T03:25:23.000Z" itemprop="datePublished">2020-08-09</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/08/06/gcp-install-gfw-v2ray-server/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Ops/">Ops</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/08/06/gcp-install-gfw-v2ray-server/" class="title">搭建免费科学上网服务器v2ray</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-08-06T12:25:23.000Z" itemprop="datePublished">2020-08-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/06/04/install-ros-melodic-ubuntu-18-04/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/ROS/">ROS</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/04/install-ros-melodic-ubuntu-18-04/" class="title">基于Ubuntu安装ROS 系统（melodic版本）</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-04T02:25:23.000Z" itemprop="datePublished">2020-06-04</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-helm-basic" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      helm基础概念
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/12/11/helm-basic/" class="article-date">
+	  <time datetime="2018-12-10T18:28:13.000Z" itemprop="datePublished">2018-12-11</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Container-Cloud/">Container Cloud</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/helm/" rel="tag">helm</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/12/11/helm-basic/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.3k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 5(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>Kubernetes的巨大成功创造了一个工具生态系统，可以简化应用程序开发和部署的复杂性。而该系列文章主要分享helm在噼里啪技术团队的生产实践经验总结。</p>
+<a id="more"></a>
+<p><strong>针对helm篇的实践落地方案分为如下几个部分：</strong></p>
+<blockquote>
+<ul>
+<li>helm 基础理论篇</li>
+<li>helm 使用技巧篇</li>
+<li>基础中间件服务运维篇</li>
+<li>微服务应用版本管理篇</li>
+<li>基于jenkins + helm的CICD方案</li>
+<li>Helm 实践趟坑篇</li>
+<li>基于Helm Istio Jenkins灰度发布实践方案</li>
+</ul>
+</blockquote>
+<h3 id="helm-是什么"><a class="markdownIt-Anchor" href="#helm-是什么"></a> helm 是什么</h3>
+<p><strong><a target="_blank" rel="noopener" href="https://github.com/helm/helm.git">helm</a></strong> 是一款可以帮你在k8s上很好运维管理复杂的应用包管理工具。如果把k8s比作CentOS操作系统的话，那么helm类似CentOS系统中的yum工具。</p>
+<p><em>这两个工具从某种程度来说的确很相似，yum可以解决rpm之间的依赖问题，而helm也可以解决应用与基础服务依赖关系。比如：WordPress应用启动之前需要启动MySQL，那就可以在WordPress的charts里定义需要依赖MySQL的charts。那么在部署WordPress的charts时，helm也会拉取并部署MySQL的Charts。</em></p>
+<h3 id="helm-名称概念"><a class="markdownIt-Anchor" href="#helm-名称概念"></a> helm 名称概念</h3>
+<p><strong>Charts:</strong> yum安装的rpm包则对应helm的charts。charts包含了整套复杂应用组件的k8s资源（Deployment、Service、Ingress、ConfigMap、Secret等）模板yaml文件以及模板对应value文件。Chart的目录结构如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mychart</span><br><span class="line">├── Chart.yaml</span><br><span class="line">├── charts</span><br><span class="line">├── templates</span><br><span class="line">│   ├── NOTES.txt</span><br><span class="line">│   ├── _helpers.tpl</span><br><span class="line">│   ├── deployment.yaml</span><br><span class="line">│   ├── ingress.yaml</span><br><span class="line">│   └── service.yaml</span><br><span class="line">└── values.yaml</span><br></pre></td></tr></table></figure>
+<ul>
+<li>charts 目录存放依赖的 chart</li>
+<li>Chart.yaml 包含 Chart 的基本信息，包括 chart 版本，名称等</li>
+<li>templates 目录下存放应用一系列 k8s 资源的 yaml 模板</li>
+<li>_helpers.tpl 此文件中定义一些可重用的模板片断，此文件中的定义在任何资源定义模板中可用</li>
+<li>NOTES.txt 介绍 chart 部署后的帮助信息，如何使用 chart 等</li>
+<li>values.yaml 包含了必要的值定义（默认值）, 用于存储 templates 目录中模板文件中用到变量的值</li>
+</ul>
+<p><strong>Release:</strong> 扩展上述类比，要在基于CentOS的系统上安装NGNIX，您将运行yum install nginx。同样，要将NGINX安装到Kubernetes集群，您只需运行helm install nginx即可。每次向群集安装Charts都称为release。但是，与传统的操作系统软件包管理器不同，使用Helm可以轻松地将一个charts多次安装到单个集群中，每个release都有自己的特定配置。所以简单的来说一个release就是一个charts的实例化。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">helm ls </span><br><span class="line">istio                             	1       	Thu Dec 13 11:50:08 2018	DEPLOYED	ack-istio-1.0.4             	1.0.4        	istio-system</span><br></pre></td></tr></table></figure>
+<p><strong>Repositories:</strong> Helm Charts 还可以发布到存储库。这些charts可以发布到私有仓库，也可以是公共托管。像yum和apt一样，可以搜索它们以发现可用的charts。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">helm search nginx</span><br><span class="line">NAME                       	CHART VERSION	APP VERSION	DESCRIPTION</span><br><span class="line">stable/nginx-ingress       	1.0.0        	0.21.0     	An nginx Ingress controller that uses ConfigMap to store ...</span><br><span class="line">stable/nginx-ldapauth-proxy	0.1.2        	1.13.5     	nginx proxy with ldapauth</span><br><span class="line">stable/nginx-lego          	0.3.1        	           	Chart <span class="keyword">for</span> nginx-ingress-controller and kube-lego</span><br><span class="line">stable/gcloud-endpoints    	0.1.2        	1          	DEPRECATED Develop, deploy, protect and monitor your APIs...</span><br></pre></td></tr></table></figure>
+<h3 id="helm-核心组件"><a class="markdownIt-Anchor" href="#helm-核心组件"></a> HELM 核心组件</h3>
+<p><strong>helm</strong> 是个客户端工具，它主要的作用如下：</p>
+<ul>
+<li>本地chart开发</li>
+<li>管理repositories</li>
+<li>与tiller 服务端进行交互
+<ul>
+<li>发送要安装的charts</li>
+<li>获取相关release的信息</li>
+<li>请求更新或者删除已存在的release</li>
+</ul>
+</li>
+</ul>
+<p><strong>tiller</strong> 是一个部署在k8s集群内部的一个与helm客户端进行交互同时也与k8s api连接的服务。主要负责如下功能：</p>
+<ul>
+<li>监听来自helm客户端传入的请求</li>
+<li>将charts和配置组合渲染来构建一个release</li>
+<li>将charts部署到k8s集群中并跟踪后续版本</li>
+<li>通过与k8s进行交互来更新以及删除集群中存在的release。</li>
+</ul>
+<center>![](/media/posts/media/jh.png)</center>
+简而言之，helm 客户端负责管理charts, tiller 服务端负责管理release生命周期。
+<h3 id="helm-内部实现"><a class="markdownIt-Anchor" href="#helm-内部实现"></a> helm 内部实现</h3>
+<ol>
+<li>Helm客户端使用Go编程语言编写，并使用gRPC协议与Tiller服务器进行交互。</li>
+<li>Tiller服务端也是用Go编写的。它提供了一个与客户端连接的gRPC服务器，它使用Kubernetes客户端库与Kubernetes进行通信。目前，该库使用REST + JSON。</li>
+<li>Tiller服务器将信息存储在位于Kubernetes内的ConfigMaps中。它不需要自己的数据库。</li>
+</ol>
+<h3 id="release-管理机制"><a class="markdownIt-Anchor" href="#release-管理机制"></a> release 管理机制</h3>
+<p><img src="/media/posts/media/release.png" alt="" /></p>
+<h4 id="创建-release"><a class="markdownIt-Anchor" href="#创建-release"></a> 创建 release</h4>
+<ul>
+<li>helm 客户端从指定的目录或本地 tar 文件或远程 repo 仓库解析出 chart 的结构信息</li>
+<li>helm 客户端指定的 chart 结构和 values 信息通过 gRPC 传递给 Tiller</li>
+<li>Tiller 服务端根据 chart 和 values 生成一个 release</li>
+<li>Tiller 将 install release 请求直接传递给 kube-apiserver</li>
+</ul>
+<h4 id="更新-release"><a class="markdownIt-Anchor" href="#更新-release"></a> 更新 release</h4>
+<ul>
+<li>helm 客户端将需要更新的 chart 的 release 名称 chart 结构和 value 信息传给 Tiller</li>
+<li>Tiller 将收到的信息生成新的 release，并同时更新这个 release 的 history</li>
+<li>Tiller 将新的 release 传递给 kube-apiserver 进行更新</li>
+</ul>
+<h4 id="删除-release"><a class="markdownIt-Anchor" href="#删除-release"></a> 删除 release</h4>
+<ul>
+<li>helm 客户端从指定的目录或本地 tar 文件或远程 repo 仓库解析出 chart 的结构信息</li>
+<li>helm 客户端指定的 chart 结构和 values 信息通过 gRPC 传递给 Tiller</li>
+<li>Tiller 服务端根据 chart 和 values 生成一个 release</li>
+<li>Tiller 将 delete release 请求直接传递给 kube-apiserver</li>
+</ul>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.shichanson.site/2018/12/11/helm-basic/" title="helm基础概念" target="_blank" rel="external">https://blog.shichanson.site/2018/12/11/helm-basic/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/shichanson" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/shichanson" target="_blank"><span class="text-dark">Chanson Shi</span><small class="ml-1x">Golang Developer &amp; DevOps</small></a></h3>
+        <div>佛系90后、热爱新技术、科幻迷、赛博朋克。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/01/03/magic-of-helm/" title="helm使用技巧篇"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/11/22/%E5%88%9B%E4%B8%96%E7%BA%AA/" title="创世纪"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone,wechat"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipay.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/weixin.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/shichanson" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/shichanson" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/shichanson" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://facebook.com/shichanson" target="_blank" title="Facebook" data-toggle=tooltip data-placement=top><i class="icon icon-facebook"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: true,
+    notify: true,
+    appId: 'B0DHQryRhputnORnDWxj85S9-gzGzoHsz',
+    appKey: 'k6BTEy2IxxPI70gQbhhDzi7P',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
